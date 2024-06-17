@@ -1,0 +1,10 @@
+
+create table landnotification(
+    land_id int,
+    farmer_id int ,
+    Name VARCHAR(50) ,
+    land_area int,
+    district VARCHAR(50),
+    surveru int,
+    soil_type VARCHAR(30),
+    documents blob);

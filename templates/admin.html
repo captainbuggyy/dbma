@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{%block link%}
+<link rel="stylesheet" href="{{url_for('static',filename='css/admin.css')}}">
+{%endblock%}
+{% block navigation %}
+
+<ul class="nav-links">
+    <!-- <li><a id="home" href="{{ url_for('home') }}">Home</a></li> -->
+    <!-- <li><a href="{{ url_for('profile') }}">Profile</a></li> -->
+    <!-- <li><a href="{{ url_for('crop') }}">Crops</a></li> -->
+    <!-- <li><a href="{{ url_for('govt_schemes') }}">Government Schemes</a></li> -->
+   
+    <li><a href="{{ url_for('allland') }}">LAND INFO</a></li>
+    <li><a href="{{ url_for('admin') }}">Admin Homepage</a></li>
+    <!-- <li><a href="{{ url_for('admin') }}">Admin</a></li> -->
+
+        <li><a href="{{ url_for('notifications') }}">Notification</a></li>
+        <li><a href="{{ url_for('logout') }}">Logout</a></li>
+</ul>
+<div class="burger">
+    <div class="line1"></div>
+    <div class="line2"></div>
+    <div class="line3"></div>
+</div>
+{% endblock %}
+
+{% block con %}
+<main>
+    <section class="admin">
+        <h1>Admin Dashboard</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Farmer ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>No of Lands</th>
+                    <th>Total Land area</th>
+                    <!-- <th>Crop</th> -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for farmer in farmers %}
+                <tr>
+                    <td>{{ farmer.farmer_id }}</td>
+                    <td>{{ farmer.Name }}</td>
+                    <td>{{ farmer.email }}</td>
+                    <td>{{ farmer.contact }}</td>
+                    <td>{{ farmer.no_of_land }}</td>
+                    <td>{{ farmer.total_area }}</td>
+                    <!-- <td>{{ farmer.crop_name }}</td> -->
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+</main>
+{% endblock %}

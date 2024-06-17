@@ -1,0 +1,55 @@
+{%extends 'base.html'%}
+
+    {%block link%}
+    <title>Login - Farmer Database</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='css/login_css.css')}}">
+    {%endblock%}
+
+    {% block navigation %}
+    <ul class="nav-links">
+        <li><a id="home" href="{{url_for('home')}}">Home</a></li>
+        <li><a href="#">Contact</a></li>
+    </ul>  
+    {% endblock %}
+
+    {%block con%}
+    <div class="main-div">
+    <div class="login-container">
+        <h2>Admin Login</h2>
+       
+    
+    {% block content %}
+    {% endblock %}
+        <form id="loginForm" method="POST">
+            <div class="input-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="input-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit">Login</button>
+            <p id="error-message" class="error-message"></p>
+        </form>
+        <p id="msg-id">{{msg}}</p>
+    </div>
+</div>
+{%endblock%}
+{%block footer%}
+{%endblock%}
+{%block script%}
+    <script src="login_js.js">
+        // Function to hide flash messages after 2 seconds
+        setTimeout(function() {
+            var flashMessages = document.querySelectorAll('.flash-message');
+            flashMessages.forEach(function(message) {
+                message.style.opacity = '0';
+                setTimeout(function() {
+                    message.style.display = 'none';
+                }, 500); // Matches the transition duration
+            });
+        }, 2000); 
+    </script>
+    {%endblock%}
+

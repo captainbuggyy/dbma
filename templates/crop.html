@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block link %}
+
+<link rel="stylesheet" href="{{url_for('static',filename='css/crop.css')}}">
+{% endblock %}
+{% block navigation %}
+<ul class="nav-links">
+    <li><a id="home" href="{{ url_for('home') }}">Home</a></li>
+    <li><a href="{{ url_for('profile') }}">Profile</a></li>
+    <li><a href="{{ url_for('crop') }}">Crops</a></li>
+    <li><a href="{{ url_for('govt_schemes') }}">Government Schemes</a></li>
+    <li><a href="{{ url_for('logout') }}">Logout</a></li>
+    <li><a href="#">Contact</a></li>
+</ul>
+<div class="burger">
+    <div class="line1"></div>
+    <div class="line2"></div>
+    <div class="line3"></div>
+</div>
+{% endblock %}
+
+{% block con %}
+
+<button id="addLandButton">Add Land</button>
+<main>
+    <section class="crop-management">
+        <h1>Crop Management</h1>
+        <form method="POST" action="{{ url_for('crop') }}">
+            <div class="form-group">
+                <label for="crop_name">Crop Name:</label>
+                <input type="text" id="crop_name" name="crop_name" required>
+            </div>
+            <div class="form-group">
+                <label for="planting_date">Planting Date:</label>
+                <input type="date" id="planting_date" name="planting_date" required>
+            </div>
+            <div class="form-group">
+                <label for="expected_yield">Expected Yield:</label>
+                <input type="number" id="expected_yield" name="expected_yield" required>
+            <button type="submit" class="btn">Add Crop</button>
+        </form>
+    </section>
+
+    <section class="crop-recommendations">
+        <h2>Recommended Crops</h2>
+        {% for crop in l %}
+        <div class="recommended-crop">
+            <h3>{{ crop.name }}</h3>
+            <p>Suitable Soil Type: {{ crop.soil_type }}</p>
+            <p>Ideal Planting Season: {{ crop.season }}</p>
+        </div>
+        {% endfor %}
+    </section>
+</main>
+{% endblock %}
+
+{% block script %}
+<script src="{{ url_for('static', filename='script/land.js') }}"></script>
+{% endblock %}

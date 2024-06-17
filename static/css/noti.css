@@ -1,0 +1,49 @@
+/* notification.css */
+
+.notification {
+    margin: 50px auto;
+    width: 80%;
+}
+
+.notification h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.notification-item {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.notification-item h2 {
+    margin-bottom: 10px;
+}
+
+.notification-item p {
+    margin: 5px 0;
+}
+
+.notification-item .action-buttons {
+    margin-top: 10px;
+}
+
+.notification-item .action-buttons form {
+    display: inline-block;
+}
+
+.notification-item .action-buttons button {
+    margin-right: 10px;
+    padding: 5px 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.notification-item .action-buttons button:hover {
+    background-color: #45a049;
+}

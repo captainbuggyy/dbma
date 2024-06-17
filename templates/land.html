@@ -1,0 +1,125 @@
+{% extends 'home.html' %}
+
+{% block link %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/land.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+{% endblock %}
+
+{% block navigation %}
+<ul class="nav-links">
+    <li><a id="home" href="{{url_for('home')}}">Home</a></li>
+    <li><a href="{{url_for('profile')}}">Profile</a></li>
+    <!-- <li><a href="#">Revenue</a></li> -->
+    <li><a href="{{url_for('govt_schemes')}}">Government Schemes</a></li>
+    <li><a id="login" href="{{url_for('logout')}}">Log out</a></li>
+</ul>
+{% endblock %}
+
+{% block con %}
+<div class="container">
+    <h2>Farmer Land Details</h2>
+    <table id="landDetailsTable">
+        <thead>
+            <tr>
+                <th>Survey Number</th>
+                <th>District</th>
+                <th>Area</th>
+                <th>Soil type</th>
+                <th>Approved</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for land in l %}
+            <tr>
+                <td>{{ land['survey_no'] }}</td>
+                <td>{{ land['district'] }}</td>
+                <td>{{ land['land_area'] }}</td>
+                <td>{{ land['soil_type'] }}</td>
+                <td>
+                    {% if land['approved'] == '1' %}
+                        Yes
+                    {% else %}
+                    {{land['approved']}}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if land['approved'] != '1' %}
+                    <form method="POST" action="{{ url_for('delete_land', id=land['land_id']) }}" style="display:inline;">
+                        <button style="background-color: red" type="submit">Delete</button>
+                    </form>
+                    {% endif %} 
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <button id="addLandButton">Add Land</button>
+</div>
+
+<!-- Add Land Modal -->
+<div id="addLandModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Add Land Details</h2>
+        <form id="addLandForm" method="POST" action="{{ url_for('land') }}" enctype="multipart/form-data">
+            <div class="input-group">
+                <label for="newLandAddress">District:</label>
+                <input type="text" id="newLandAddress" name="newLandAddress" required>
+            </div>
+            <div class="input-group">
+                <label for="newSurveyNumber">Survey Number:</label>
+                <input type="text" id="newSurveyNumber" name="newSurveyNumber" required>
+            </div>
+            <div class="input-group">
+                <label for="land_area">Land Area:</label>
+                <input type="text" id="land_area" name="land_area" required>
+            </div>
+            <div class="input-group">
+                <label for="soil_type">Soil Type:</label>
+                <select id="soil_type" name="soil_type" required>
+                    <option value="Loamy Soil">Loamy Soil</option>
+                    <option value="Sandy Soil">Sandy Soil</option>
+                    <option value="Clay Soil">Clay Soil</option>
+                    <option value="Silty Soil">Silty Soil</option>
+                    <option value="Peaty Soil">Peaty Soil</option>
+                    <option value="Chalky Soil">Chalky Soil</option>
+                    <option value="Saline Soil">Saline Soil</option>
+                    <option value="Alluvial Soil">Alluvial Soil</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label for="pdf_file">Upload PDF Document: Land Documents</label>
+                <input type="file" id="pdf_file" name="pdf_file" accept="application/pdf">
+            </div>
+            <button type="submit">Add Land</button>
+        </form>
+    </div>
+</div>
+
+<!-- Edit Land Modal -->
+<div id="editLandModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Edit Land Details</h2>
+        <form id="editLandForm" method="POST" action="{{ url_for('edit_land') }}">
+            <input type="hidden" id="editLandId" name="editLandId">
+            <div class="input-group">
+                <label for="editLandAddress">Land Address:</label>
+                <input type="text" id="editLandAddress" name="editLandAddress">
+            </div>
+            <div class="input-group">
+                <label for="editSurveyNumber">Survey Number:</label>
+                <input type="text" id="editSurveyNumber" name="editSurveyNumber" required>
+            </div>
+            <button type="submit">Save Changes</button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+{% block footer %}
+{% endblock %}
+{% block script %}
+<script src="{{ url_for('static', filename='script/land.js') }}"></script>
+{% endblock %}

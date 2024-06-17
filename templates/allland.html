@@ -1,0 +1,34 @@
+{% extends 'admin.html' %}
+
+{%block link%}
+<link rel="stylesheet" href="{{url_for('static',filename='css/admin.css')}}">
+{%endblock%}
+
+{% block con %}
+<main>
+    <section class="admin">
+        <h1>Admin Dashboard</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>District</th>
+                    <th>Survey Number</th>
+                    <th>Owned by</th>
+                    <th>Area </th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for farmer in farmers %}
+                <tr>
+                    <td>{{ farmer.District }}</td>
+                    <td>{{ farmer.survey_no }}</td>
+                    <td>{{ farmer.Name }}</td>
+                    <td>{{ farmer.land_area }}</td>
+                    <!-- <td>{{ farmer.crop_name }}</td> -->
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+</main>
+{% endblock %}

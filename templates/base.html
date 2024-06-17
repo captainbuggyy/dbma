@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmer Database</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='css/styles.css')}}">
+    {%block link%}
+    {%endblock%}
+</head>
+<body>
+    <nav>
+        <div class="logo">FarmerDB</div>
+    {%block navigation%}
+
+    {%endblock%}
+    </nav>
+    
+
+    {%block con%}
+    
+    {%endblock%}
+
+
+{%block footer%}
+    <footer>
+        <div class="footer-container">
+            <div class="footer-section about">
+                <h2>About Us</h2>
+                <p>FarmerDB is a comprehensive platform designed to support farmers by providing essential information and tools to enhance agricultural practices and market accessibility.</p>
+                <p>Our mission is to empower farmers with data-driven insights, connecting them with markets and resources to optimize productivity and sustainability.</p>
+                <p>We aim to bridge the gap between traditional farming methods and modern agricultural technologies, fostering a community of well-informed and resourceful farmers.</p>
+            </div>
+            <div class="footer-section links">
+                <h2>Quick Links</h2>
+                <ul>
+                    <li><a href="{{url_for('home')}}">Home</a></li>
+                    <li><a href="#">Farmers</a></li>
+                    <li><a href="#">Crops</a></li>
+                    <li><a href="#">Markets</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-section contact" id="contact-section">
+                <h2>Contact Us</h2>
+                <p>Email: info@farmerdb.com</p>
+                <p>Phone: +123-456-7890</p>
+                <p>Address: 123 Farming Lane, AgriCity, AG 12345</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2024 FarmerDB | Designed by YourName
+        </div>
+    </footer>
+{%endblock%}
+   {%block script%}
+    <script src="script.js"></script>
+    {%endblock%}
+</body>
+</html>

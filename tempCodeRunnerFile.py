@@ -1,0 +1,1 @@
+land_id = request.form.get('land_id')

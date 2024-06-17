@@ -1,0 +1,55 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+
+main {
+    padding: 2rem;
+}
+
+.admin {
+    padding: 2rem;
+}
+
+.admin table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 2rem;
+}
+
+.admin table, .admin th, .admin td {
+    border: 1px solid #ddd;
+}
+
+.admin th, .admin td {
+    padding: 1rem;
+    text-align: left;
+}
+
+.admin th {
+    background-color: #f4f4f4;
+}
+
+footer {
+    background-color: #333;
+    color: #fff;
+    padding: 1rem;
+    text-align: center;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.footer-section {
+    flex: 1;
+    padding: 1rem;
+}
+
+.footer-bottom {
+    margin-top: 1rem;
+}

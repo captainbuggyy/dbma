@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block navigation %}
+    <ul class="nav-links">
+        {% if session.get('username') %}
+            <li><a id="home" href="{{url_for('home')}}">Home</a></li>
+            <li><a id="land" href="{{url_for('land')}}">Land</a></li>
+            <li><a href="{{url_for('profile')}}">Profile</a></li>
+            <!-- <li><a href="#">crops</a></li> -->
+            <li><a href="#">Revenue</a></li>
+            <li><a href="{{url_for('govt_schemes')}}">Government Schemes</a></li>
+            <li><a href="#contact-section">Contact</a></li>
+            <li><a id="login" href="{{url_for('logout')}}">Log out</a></li>
+        {% else %}
+            <li><a id="login" href="{{ url_for('login') }}">Login</a></li>
+            <li><a href="{{ url_for('register') }}">Registration</a></li>
+            <li><a href="{{ url_for('adminlogin') }}">Admin login</a></li>
+        {% endif %}
+        <!-- <li><a href="#contact-section">Contact</a></li> -->
+    </ul>
+    <div class="burger">
+        <div class="line1"></div>
+        <div class="line2"></div>
+        <div class="line3"></div>
+    </div>
+{% endblock %}
+
+
+{% block con %}
+<main>
+    <section class="hero">
+        <h1>Welcome to FarmerDB</h1>
+        <p>Your comprehensive resource for agricultural data and market information.</p>
+    </section>
+
+    <section class="features">
+        <h2>Features</h2>
+        <div class="feature">
+            <h3>Farmer Profiles</h3>
+            <p>Access detailed profiles of farmers including their crops, farming techniques, and more.</p>
+        </div>
+        <div class="feature">
+            <h3>Crop Data</h3>
+            <p>Find extensive information on various crops, including planting and harvesting tips.</p>
+        </div>
+        <div class="feature">
+            <h3>Market Access</h3>
+            <p>Connect with local and regional markets to sell your produce effectively.</p>
+        </div>
+    </section>
+
+    <section class="about">
+        <h2>About Us</h2>
+        <p>FarmerDB is a comprehensive platform designed to support farmers by providing essential information and tools to enhance agricultural practices and market accessibility.</p>
+        <p>Our mission is to empower farmers with data-driven insights, connecting them with markets and resources to optimize productivity and sustainability.</p>
+        <p>We aim to bridge the gap between traditional farming methods and modern agricultural technologies, fostering a community of well-informed and resourceful farmers.</p>
+    </section>
+</main>
+
+{% endblock %}
