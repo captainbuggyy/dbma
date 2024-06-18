@@ -1,7 +1,7 @@
 
 create table landnotification(
     land_id int,
-    farmer_id int ,
+    farmer_id in ,
     Name VARCHAR(50) ,
     land_area int,
     district VARCHAR(50),
