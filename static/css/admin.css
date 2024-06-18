@@ -1,3 +1,91 @@
+/* admin.css */
+
+/* Style for the add-scheme section */
+.add-scheme {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.add-scheme h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.add-scheme form {
+    margin-bottom: 20px;
+}
+
+.add-scheme .form-group {
+    margin-bottom: 15px;
+}
+
+.add-scheme label {
+    display: block;
+    font-weight: bold;
+}
+
+.add-scheme input[type="text"],
+.add-scheme textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    box-sizing: border-box;
+}
+
+.add-scheme textarea {
+    height: 120px;
+    resize: vertical;
+}
+
+.add-scheme .submit-button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.add-scheme .submit-button:hover {
+    background-color: #45a049;
+}
+
+.add-scheme hr {
+    margin: 20px 0;
+    border: none;
+    border-top: 1px solid #ccc;
+}
+
+.add-scheme h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.add-scheme .existing-schemes .scheme {
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.add-scheme .existing-schemes h3 {
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+
+.add-scheme .existing-schemes p {
+    margin-bottom: 5px;
+}
+
 body {
     font-family: Arial, sans-serif;
     margin: 0;

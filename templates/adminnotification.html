@@ -77,17 +77,27 @@ button {
             <a href="{{ url_for('view_pdf', land_id=notification.land_id) }}">View PDF Document</a> </p>
             {% elif notification.type == 'govt_scheme' %}
             <h2>Government Scheme Application</h2>
-            <p><strong>Name:</strong> {{ notification.Name }}</p>
+            <p><strong>Name:</strong> {{ notification.name }}</p>
+            <p><strong>Scheme:</strong> {{ notification.scheme_name }}</p>
             <p><strong>Email:</strong> {{ notification.email }}</p>
             <p><strong>Contact:</strong> {{ notification.contact }}</p>
             <p><strong>Income:</strong> {{ notification.income }}</p>
+            <a href="{{ url_for('view_pdf2', notification_id=notification.notification_id) }}">View PDF Document</a> </p>
+            <!-- <p><strong>Income:</strong> {{ notification.scheme_id }}</p> -->
             {% endif %}
             <div class="action-buttons">
                 <form action="" method="post" class="approve-form">
                     <input type="hidden" name="notification_id" value="{{ notification.notification_id }}">
+                    <input type="hidden" name="type" value="{{ notification.type }}">
+                    {% if notification.type == 'land' %}
+                    <input type="hidden" name="land_id" value="{{ notification.land_id }}">
+                    {% else %}
+                    <input type="hidden" name="farmer_id" value="{{ notification.farmer_id }}">
+                    <input type="hidden" name="scheme_id" value="{{ notification.scheme_id }}">
+                    {% endif %}
                     <button type="submit" name="action" value="approve">Approve</button>
                 </form>
-                <button type="button" onclick="openModal('{{ notification.notification_id }}')">Reject</button>
+                <button type="button" onclick="openModal('{{ notification.notification_id }}', '{{ notification.type }}', '{{ notification.land_id if notification.type == 'land' else '' }}', '{{ notification.farmer_id if notification.type != 'land' else '' }}', '{{ notification.scheme_id if notification.type != 'land' else '' }}')">Reject</button>
             </div>
         </div>
         {% endfor %}
@@ -103,6 +113,10 @@ button {
             <div class="modal-body">
                 <form id="rejectForm" action="" method="post">
                     <input type="hidden" name="notification_id" id="modalNotificationId">
+                    <input type="hidden" name="type" id="modalType">
+                    <input type="hidden" name="land_id" id="modalLandId">
+                    <input type="hidden" name="farmer_id" id="modalFarmerId">
+                    <input type="hidden" name="scheme_id" id="modalSchemeId">
                     <textarea name="rejection_reason" id="rejectionReason" rows="4" placeholder="Enter reason for rejection" required></textarea>
             </div>
             <div class="modal-footer">
@@ -115,8 +129,12 @@ button {
 </main>
 
 <script>
-function openModal(notificationId) {
+function openModal(notificationId, type, landId, farmerId, schemeId) {
     document.getElementById('modalNotificationId').value = notificationId;
+    document.getElementById('modalType').value = type;
+    document.getElementById('modalLandId').value = landId;
+    document.getElementById('modalFarmerId').value = farmerId;
+    document.getElementById('modalSchemeId').value = schemeId;
     document.getElementById('rejectionModal').style.display = 'block';
 }
 

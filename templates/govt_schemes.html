@@ -1,64 +1,71 @@
 {% extends 'home.html' %}
-{%block link%}
+{% block link %}
 <link rel="stylesheet" href="{{url_for('static',filename='css/govt.css')}}">
-{%endblock%}
+{% endblock %}
     
-
-    {% block con %}
-    <main>
-        <section class="schemes">
-            <h1>Government Schemes</h1>
-            {% for scheme_item in scheme %}
-<div class="scheme">
-    <h2>Scheme {{ loop.index }}: {{ scheme_item['name'] }}</h2>
-    <p><strong>Income Criteria:</strong> {{ scheme_item['income'] }}</p>
-    <p><strong>Land Area Criteria:</strong> {{ scheme_item['criteria_area'] }}</p>
-    <p><strong>Description:</strong> {{ scheme_item['benefits'] }}</p>
-    <form method="post">
-        <input type="hidden" name="scheme" value="{{ scheme_item['scheme_id'] }}">
-        <button class="apply-button" type="submit">Apply Now</button>
-    </form>
-</div>
-{% endfor %}
-
-        </section>
-    </main>
-    {% endblock %}
-
-    {% block footer %}
-    <footer>
-        <div class="footer-container">
-            <div class="footer-section about">
-                <h2>About Us</h2>
-                <p>FarmerDB is a comprehensive platform designed to support farmers by providing essential information and tools to enhance agricultural practices and market accessibility.</p>
-                <p>Our mission is to empower farmers with data-driven insights, connecting them with markets and resources to optimize productivity and sustainability.</p>
-                <p>We aim to bridge the gap between traditional farming methods and modern agricultural technologies, fostering a community of well-informed and resourceful farmers.</p>
+{% block con %}
+<main>
+    <section class="schemes">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="success-message">
+                {{ messages[0] }}
             </div>
-            <div class="footer-section links">
-                <h2>Quick Links</h2>
-                <ul>
-                    <li><a href="{{url_for('home')}}">Home</a></li>
-                    <li><a href="{{url_for('govt_schemes')}}">Schemes</a></li>
-                    <li><a href="#">Crops</a></li>
-                    <li><a href="#">Markets</a></li>
-                    <li><a href="#">Contact</a></li>
-                </ul>
+        {% endif %}
+    {% endwith %}
+        <h1>Government Schemes</h1>
+        {% for scheme_item in scheme %}
+            <div class="scheme">
+                <h2>Scheme {{ loop.index }}: {{ scheme_item['name'] }}</h2>
+                <p><strong>Income Criteria:</strong> {{ scheme_item['income'] }}</p>
+                <p><strong>Land Area Criteria:</strong> {{ scheme_item['criteria_area'] }}</p>
+                <p><strong>Description:</strong> {{ scheme_item['benefits'] }}</p>
+                <form method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="scheme" value="{{ scheme_item['scheme_id'] }}">
+                    <div class="file-input">
+                        <label for="pdf_file">Upload PDF Document:</label>
+                        <input type="file" id="pdf_file" name="pdf_file" accept=".pdf" required>
+                    </div>
+                    <button class="apply-button" type="submit">Apply Now</button>
+                </form>
             </div>
-            <div class="footer-section contact">
-                <h2>Contact Us</h2>
-                <p>Email: info@farmerdb.com</p>
-                <p>Phone: +123-456-7890</p>
-                <p>Address: 123 Farming Lane, AgriCity, AG 12345</p>
-            </div>
+        {% endfor %}
+    </section>
+</main>
+{% endblock %}
+
+{% block footer %}
+<footer>
+    <div class="footer-container">
+        <div class="footer-section about">
+            <h2>About Us</h2>
+            <p>FarmerDB is a comprehensive platform designed to support farmers by providing essential information and tools to enhance agricultural practices and market accessibility.</p>
+            <p>Our mission is to empower farmers with data-driven insights, connecting them with markets and resources to optimize productivity and sustainability.</p>
+            <p>We aim to bridge the gap between traditional farming methods and modern agricultural technologies, fostering a community of well-informed and resourceful farmers.</p>
         </div>
-        <div class="footer-bottom">
-            &copy; 2024 FarmerDB | Designed by YourName
+        <div class="footer-section links">
+            <h2>Quick Links</h2>
+            <ul>
+                <li><a href="{{url_for('home')}}">Home</a></li>
+                <li><a href="{{url_for('govt_schemes')}}">Schemes</a></li>
+                <li><a href="#">Crops</a></li>
+                <li><a href="#">Markets</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
         </div>
-    </footer>
-    {% endblock %}
+        <div class="footer-section contact">
+            <h2>Contact Us</h2>
+            <p>Email: info@farmerdb.com</p>
+            <p>Phone: +123-456-7890</p>
+            <p>Address: 123 Farming Lane, AgriCity, AG 12345</p>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        &copy; 2024 FarmerDB | Designed by YourName
+    </div>
+</footer>
+{% endblock %}
 
-    {% block script %}
-    <script src="{{url_for('static', filename='js/script.js')}}"></script>
-    {% endblock %}
-</body>
-</html>
+{% block script %}
+<script src="{{url_for('static', filename='js/script.js')}}"></script>
+{% endblock %}

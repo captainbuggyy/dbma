@@ -99,22 +99,7 @@
 
 <!-- Edit Land Modal -->
 <div id="editLandModal" class="modal">
-    <div class="modal-content">
-        <span class="close">&times;</span>
-        <h2>Edit Land Details</h2>
-        <form id="editLandForm" method="POST" action="{{ url_for('edit_land') }}">
-            <input type="hidden" id="editLandId" name="editLandId">
-            <div class="input-group">
-                <label for="editLandAddress">Land Address:</label>
-                <input type="text" id="editLandAddress" name="editLandAddress">
-            </div>
-            <div class="input-group">
-                <label for="editSurveyNumber">Survey Number:</label>
-                <input type="text" id="editSurveyNumber" name="editSurveyNumber" required>
-            </div>
-            <button type="submit">Save Changes</button>
-        </form>
-    </div>
+
 </div>
 
 {% endblock %}

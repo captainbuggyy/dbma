@@ -45,6 +45,16 @@
                 <p><strong>Village:</strong> {{ user.get('village') }}</p>
                 <p><strong>State:</strong> {{ user.get('state') }}</p>
                 <p><strong>Number of Lands:</strong> {{ user.get("no_of_land") }}</p>
+                
+                <h2>Government Scheme</h2>
+                {% if(scheme) %}
+                <p>Scheme applied are:</p>
+                {% for sc in scheme %}
+                <p>{{sc.get('name')}}</p>
+                {% endfor %}
+                {% else %}
+                <p>No scheme applied</p>
+                {% endif %}
             </div>
         </section>
     </main>

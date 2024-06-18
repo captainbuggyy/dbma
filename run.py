@@ -1,10 +1,8 @@
 from flask import Flask, render_template, request, session,flash,get_flashed_messages,url_for,redirect,make_response
 from flask_mysqldb import MySQL
-# from flask
 from flask_bcrypt import Bcrypt
 import mysql.connector
 import requests
-
 app = Flask(__name__)
 bcrypt=Bcrypt(app)
 mydb=mysql.connector.connect(
@@ -14,7 +12,6 @@ mydb=mysql.connector.connect(
     database="agriculture"
 )
 s=mydb.cursor(dictionary=True)
-# session['user']=0
 app.config['SECRET_KEY']="c61261c7b2ba8da70c004965"
 @app.route('/')
 @app.route('/home')
@@ -39,79 +36,24 @@ def profile():
     id=session['ids']
     cur=mydb.cursor(dictionary=True)
     query="select * from farmer where farmer_id=%s"
-    cur.execute(query,(id,));
+    cur.execute(query,(id,))
     a=cur.fetchall()
+    query="select name from govt_schemes right join scheme_applied on scheme_applied.scheme_id=govt_schemes.scheme_id where farmer_id=%s"
+    cur.execute(query,(id,))
+    d=cur.fetchall()
+    print(a)
+    print("ddd"*1000)
     # print(id)
     query="SELECT count(*) from land WHERE approved=1 and farmer_id=%s"
     cur.execute(query,(id,));
     b=cur.fetchall()
     # print(type(b))
     a[0]['no_of_land']=b[0].get('count(*)')
-    print(a[0]['no_of_land'])
-    # print()
-    # for key,val in a[0]:
-        # 
-        # print(key,":",val," ")
-    print("*"*1000)
-    # if request.method==
-    return render_template('profile.html',user=a[0])
-# @app.route('/land', methods=['GET', 'POST'])
-# def land():
-#     cur = mydb.cursor(dictionary=True)
-#     username = session['username']
-    
-#     # Use parameterized query to avoid SQL injection
-#     query = "SELECT id FROM user WHERE user_name = %s"
-#     cur.execute(query, (username,))
-#     l = cur.fetchall()
-    
-#     if not l:
-#         cur.close()
-#         return "Farmer not found", 404
-    
-#     k = session['ids']
-    
-#     query1 = "SELECT * FROM land WHERE farmer_id = %s"
-#     cur.execute(query, (k,))
-#     b = cur.fetchall()
-    
-#     if request.method == 'POST':
-#         address = request.form['newLandAddress']
-#         survey_number = request.form['newSurveyNumber']
-#         soil_type=request.form['soil_type']
-#         land_area=request.form['land_area']
-#         pdf_file = request.files['pdf_file']
-#         pdf_data = pdf_file.read() if pdf_file else None
-#         # Validate form data (basic example)
-#         if not address or not survey_number:
-#             cur.close()
-#             return "Invalid input", 400
-        
-#         # Use parameterized query to avoid SQL injection
-#         query = "INSERT INTO land (district, survey_no, farmer_id,land_area,soil_type,file) VALUES (%s, %s, %s,%s,%s,%s)"
-#         cur.execute(query, (address, survey_number, k,land_area,soil_type,pdf_data))
-#         mydb.commit()
-#         query="select max(land_id) as ma from land"
-#         cur.execute(query)
-#         landid=cur.fetchone().get('ma')
-#         print(landid)
-#         print('*'*1000)
-#         query="insert into notification(farmer_id,land_id,type)values(%s,%s,%s)"
-#         cur.execute(query,(k,landid,"land"))
-#         mydb.commit()
-        
-#         # Refresh the land list after inserting new land
-#     cur.execute(query1,(k,))
-#     b = cur.fetchall()
-    
-#     cur.close()
-#     return render_template('land.html', l=b)
+    return render_template('profile.html',user=a[0],scheme=d)
 @app.route('/land', methods=['GET', 'POST'])
 def land():
     cur = mydb.cursor(dictionary=True)
     username = session['username']
-    
-    # Use parameterized query to avoid SQL injection
     query = "SELECT id FROM user WHERE user_name = %s"
     cur.execute(query, (username,))
     l = cur.fetchall()
@@ -131,21 +73,15 @@ def land():
         survey_number = request.form['newSurveyNumber']
         soil_type = request.form['soil_type']
         land_area = request.form['land_area']
-        
-        # Handle file upload
+
         pdf_file = request.files['pdf_file']
         pdf_data = pdf_file.read() if pdf_file else None
-        
-        # Validate form data
         if not address or not survey_number:
             cur.close()
             return "Invalid input", 400
-        
-        # Use parameterized query to avoid SQL injection
         query = "INSERT INTO land (district, survey_no, farmer_id, land_area, soil_type, file) VALUES (%s, %s, %s, %s, %s, %s)"
         cur.execute(query, (address, survey_number, k, land_area, soil_type, pdf_data))
         mydb.commit()
-        
         query = "SELECT MAX(land_id) as ma FROM land"
         cur.execute(query)
         landid = cur.fetchone().get('ma')
@@ -165,43 +101,25 @@ def land():
 def govt_schemes():
     if request.method=='POST':
         cur=mydb.cursor(dictionary=True)
-        print('1'*1000)
         scheme_id=request.form.get("scheme")
-        query = "INSERT INTO notification (farmer_id, type) VALUES (%s, %s)"
-        cur.execute(query, (session['ids'], "govt_scheme"))
-        print(session['ids'])
+        pdf_file = request.files['pdf_file']
+        pdf_data = pdf_file.read()
+        query = "INSERT INTO notification (farmer_id, type,scheme_id,pd) VALUES (%s, %s,%s,%s)"
+        cur.execute(query, (session['ids'], "govt_scheme",scheme_id,pdf_data))
         mydb.commit()
+        flash('Successfully applied for the scheme.')
+        return redirect(url_for('govt_schemes'))
     cur=mydb.cursor(dictionary=True)
     cur.execute("select * from govt_schemes")
     a=cur.fetchall()
     return render_template('govt_schemes.html',scheme=a)
-@app.route('/edit_land', methods=['POST'])
-def edit_land():
-    mycursor=mydb.cursor(dictionary=True)
-    if 'username' not in session:
-        return redirect(url_for('login'))
-    id = request.form.get('id')
-    # id=session['ids']
-
-    address = request.form['editLandAddress']
-    print(address*100)
-    survey_number = request.form['editSurveyNumber']
-    mycursor.execute(
-    "UPDATE land SET district = %s, survey_no = %s WHERE land_id = %s",
-    (address, survey_number, id))
-    mydb.commit()
-    # query="insert into notification(farmer_id,land_id,type)values(%s,%s,%s)"
-    #     cur.execute(query,(id,landid,"land"))
-    #     mydb.commit()
-    # showland()
-    return redirect(url_for('land'))
-
 @app.route('/login',methods=['GET','POST'])
 def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
         # password=bcrypt.generate_password_hash(password).decode('utf-8')
+        # print(password)
         cursor = mydb.cursor()
         query = "SELECT * FROM user WHERE user_name = %s AND password = %s"
         cursor.execute(query, (username, password))
@@ -209,22 +127,15 @@ def login():
         query = "SELECT id FROM user WHERE user_name = %s"
         cursor.execute(query, (username,))
         farmer = cursor.fetchone()[0]
-        # print(farmer)
-        # print(1000*'*')
         cursor.close()
         if user:
-            # print(id*1000)
             session['username'] =username
             session['ids']=farmer
             session['user']='user'
             return redirect(url_for('land'))
         else:
-            # Invalid credentials
-            # Render login page with error message
-            flash(f'Account created successfully  as sex',category='success')
             return render_template('login.html', msg="Invalid username or password.")
     return render_template('login.html')
-
 @app.route('/register',methods=['GET','POST'])
 def register():
     if request.method == 'POST':
@@ -245,8 +156,6 @@ def register():
         ap=s.fetchall()
         id=ap[0].get('id')
         return redirect(url_for('info',id=id))
-        # return render_template('info.html')
-       
     return render_template('register.html')
 @app.route('/info',methods=['GET','POST'])
 def info():
@@ -259,20 +168,16 @@ def info():
         state = request.form['state']
         village = request.form['village']
         email=request.form['email']
-        
-        # cur=mydb.cursor()
-        print('*'*100)
         query = "INSERT INTO farmer (farmer_id,name, contact, district, state, village,email) VALUES (%s,%s, %s, %s, %s, %s,%s)"
         # Execute the query using the existing cursor 's'
         s.execute(query, (id ,name, phone_no, district, state, village,email))
         mydb.commit()
         
         return redirect(url_for('login'))
-        return render_template('info.html')
     return render_template('info.html')
 @app.route('/logout')
 def logout():
-    session.clear()  # Clear the session
+    session.clear() 
     response = make_response(redirect(url_for('login')))
     response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0'
     response.headers['Pragma'] = 'no-cache'
@@ -283,8 +188,6 @@ def delete_land(id):
     if 'username' not in session:
         return redirect(url_for('login'))
     username=session['username']
-    # a=mycursor.execute(f"select land_id from farmer where Name='{username}'")
-    # a=a[0].get('farmer_id')
     mycursor.execute(f"DELETE FROM land WHERE land_id = {id}")
     mydb.commit()
     return redirect(url_for('land'))
@@ -294,97 +197,141 @@ def admin():
         return redirect(url_for('home'))
     cursor = mydb.cursor(dictionary=True)
     query = """
-    SELECT farmer.farmer_id, Name, email, contact, COUNT(land.land_id) AS no_of_land, SUM(land.land_area) AS total_area
-FROM farmer
-LEFT JOIN land ON land.farmer_id = farmer.farmer_id
-GROUP BY farmer.farmer_id
-
+    SELECT 
+    farmer.farmer_id, 
+    Name, 
+    email, 
+    contact, 
+    COUNT(land.land_id) AS no_of_land, 
+    SUM(land.land_area) AS total_area,
+    GROUP_CONCAT(distinct scheme_applied.scheme_id) AS scheme_ids
+FROM 
+    farmer
+LEFT JOIN 
+    land ON land.farmer_id = farmer.farmer_id
+LEFT JOIN 
+    scheme_applied ON scheme_applied.farmer_id = farmer.farmer_id
+GROUP BY 
+    farmer.farmer_id;
 
     """
     cursor.execute(query)
     farmers = cursor.fetchall()
     cursor.close()
     return render_template('admin.html', farmers=farmers)
-@app.route('/notifications',methods=['GET','POST'])
+@app.route('/notifications', methods=['GET', 'POST'])
 def notifications():
-    if session['user']!="admin":
-        return "error",404
+    if session['user'] != "admin":
+        return "error", 404
     if request.method == 'POST':
-        land_id = request.form.get('land_id')
-        notification_id = request.form.get('notification_id')
         action = request.form.get('action')
-        scheme_id=request.form.get('scheme_id')
-        farmer_id=request.form.get('farmer_id')
-        type=request.form.get('type')
-        print(notification_id*2)
-        print('&'*1000)
-        cur=mydb.cursor(dictionary=True)
+        notification_id = request.form.get('notification_id')
+        type = request.form.get('type')
+
+        cur = mydb.cursor(dictionary=True)
+        
         if action == 'approve':
-            if type=='land':
-                query="UPDATE land set approved=1 where land_id=%s"
+            
+            if type == 'land':
+                land_id = request.form.get('land_id')
+                query = "UPDATE land SET approved = 1 WHERE land_id = %s"
+                cur.execute(query, (land_id,))
+                query="INSERT INTO farmer_notification (farmer_id, reason) SELECT farmer_id, %s FROM land WHERE land_id = %s"
+                ans="your application for land is approved"
+                cur.execute(query,(ans,land_id))
+            else:
+                scheme_id = request.form.get('scheme_id')
+                farmer_id = request.form.get('farmer_id')
+                query = "INSERT INTO scheme_applied (farmer_id, scheme_id) VALUES (%s, %s)"
+                cur.execute(query, (farmer_id, scheme_id))
+                query="Select name from govt_schemes where scheme_id=%s"
+                cur.execute(query,(scheme_id,))
+                a=cur.fetchall()[0].get('name')
+                # print(a)
+                query="Insert into farmer_notification(farmer_id,reason) values(%s,%s)"
+                ans="your application for "+a+"is approved"
+                cur.execute(query,(farmer_id,ans))
+
+        elif action == 'reject':
+            
+            reason = request.form.get('rejection_reason')
+            
+            if type == 'land':
+                land_id = request.form.get('land_id')
+                query="INSERT INTO farmer_notification (farmer_id, reason) SELECT farmer_id, %s FROM land WHERE land_id = %s"
+                ans="Rejected Land Application:"+reason
+                cur.execute(query,(ans,land_id))
+                query="delete from land where land_id=%s"
                 cur.execute(query,(land_id,))
             else:
-                query="insert into scheme_applied(farmer_id,scheme_id) values(%s,%s)"
-                cur.execute(query,(farmer_id,scheme_id))
-             
-            pass
-        elif action == 'reject':
-            reason=request.form.get("rejection_reason")
-            query="UPDATE land set approved=%s where land_id=%s"
-            cur.execute(query,(reason,land_id)) 
-            pass
-        query="delete from notification where notification_id=%s"
-        cur.execute(query,(land_id,))
+                farmer_id = request.form.get('farmer_id')
+                scheme_id = request.form.get('scheme_id')
+                query="Insert into farmer_notification(farmer_id,reason) values(%s,%s)"
+                ans="Rejected Govt scheme application"+reason
+                cur.execute(query,(farmer_id,ans))
 
-    cursor=mydb.cursor(dictionary=True)
-    query="select * from notification"
+        query = "DELETE FROM notification WHERE notification_id = %s"
+        cur.execute(query, (notification_id,))
+        mydb.commit()
+        return redirect(url_for('notifications'))
+
+    cursor = mydb.cursor(dictionary=True)
+    query = "SELECT * FROM notification"
     cursor.execute(query)
-    a=cursor.fetchall()
-    print(a)
-    l=[]
-    noti=[]
-    for i in range(len(a)):
-        type=a[i].get('type')
-        farmer_id=a[i].get('farmer_id')
-        notification_id=int(a[i].get('notification_id'))
-        if(type=='land'):
-            landid=a[i].get('land_id')
-            query='''SELECT 
-        farmer.Name as farmer_name,land_id,
-        farmer.email as email,
-        farmer.farmer_id as farmer_id,
-        farmer.contact as contact,
-        land.survey_no ,
-        land.land_area,
-        land.file,
-        land.district
-    FROM 
-        land
-    INNER JOIN 
-        farmer 
-    ON 
-        land.farmer_id = farmer.farmer_id
-    WHERE 
-        land.land_id = %s
-    AND 
-        land.farmer_id = %s'''
+    notifications = cursor.fetchall()
 
-            cursor.execute(query,(landid,farmer_id))
-            name=cursor.fetchall()[0]
-            name['type']='land'
-            l.append(name)
+    formatted_notifications = []
+    for notification in notifications:
+        type = notification.get('type')
+        farmer_id = notification.get('farmer_id')
+        notification_id = notification.get('notification_id')
+        scheme_id = notification.get('scheme_id')
+        if type == 'land':
+            land_id = notification.get('land_id')
+            query = '''
+                SELECT 
+                    farmer.Name as farmer_name, land_id,
+                    farmer.email, farmer.farmer_id, farmer.contact,
+                    land.survey_no, land.land_area, land.file, land.district
+                FROM 
+                    land
+                INNER JOIN 
+                    farmer 
+                ON 
+                    land.farmer_id = farmer.farmer_id
+                WHERE 
+                    land.land_id = %s
+                AND 
+                    land.farmer_id = %s
+            '''
+            cursor.execute(query, (land_id, farmer_id))
+            details = cursor.fetchone()
+            details['type'] = 'land'
+            details['notification_id'] = notification_id
+            details['farmer_id'] = farmer_id
+            details['land_id'] = land_id  # Add land_id to details for modal form
+            formatted_notifications.append(details)
         else:
-            query="Select * from farmer where farmer_id=%s"
-            cursor.execute(query,(farmer_id,))
-            name=cursor.fetchall()[0]
-            # print(name)
-            name['land_id']=0
-            name['type']='govt_scheme'
-            name['notifcation_id']=notification_id
-            # print('1'*1000)
-            l.append(name)
-            
-    return render_template('adminnotification.html', notifications=l)
+            query = "SELECT * FROM farmer WHERE farmer_id = %s"
+            cursor.execute(query, (farmer_id,))
+            details = cursor.fetchone()
+            details['type'] = 'govt_scheme'
+            details['notification_id'] = notification_id
+            details['scheme_id']=scheme_id
+            cur=mydb.cursor()
+            query="Select name from govt_schemes where scheme_id=%s"
+            cur.execute(query,(scheme_id,))
+            a=cur.fetchall()[0][0]
+            details['scheme_name']=a
+            formatted_notifications.append(details)
+    return render_template('adminnotification.html', notifications=formatted_notifications)
+@app.route('/farmernotification')
+def farmernotification():
+    farmer_id=session['ids']
+    cur=mydb.cursor(dictionary=True)
+    cur.execute("Select * from farmer_notification where farmer_id=%s order by notification_id desc",(farmer_id,))
+    a=cur.fetchall()
+    return render_template('farmernotification.html',notifications=a)
 @app.route('/adminlogin',methods=['GET','POST'])
 def adminlogin():
     if request.method == 'POST':
@@ -428,6 +375,41 @@ def view_pdf(land_id):
         # Log the exception for debugging purposes
         print(f"Error retrieving PDF: {e}")
         return "An error occurred while retrieving the PDF", 500
+@app.route('/view_pdf2/<int:notification_id>')
+def view_pdf2(notification_id):
+    try:
+        cur = mydb.cursor()
+        query = "SELECT pd FROM notification WHERE notification_id = %s"
+        cur.execute(query, (notification_id,))
+        result = cur.fetchone()
+        cur.close()
+        
+        if result and result[0]:
+            pdf_data = result[0]
+            with open(f"scheme_{notification_id}.pdf", "wb") as f:
+                f.write(pdf_data)
+            response = make_response(pdf_data)
+            response.headers['Content-Type'] = 'application/pdf'
+            response.headers['Content-Disposition'] = 'inline; filename=land_document.pdf'
+            return response
+        else:
+            return "PDF not found", 404
+    except Exception as e:
+        # Log the exception for debugging purposes
+        print(f"Error retrieving PDF: {e}")
+        return "An error occurred while retrieving the PDF", 500
+@app.route('/govt_scheme_admin',methods=['GET','POST'])
+def govt_scheme_admin():
+    cur=mydb.cursor(dictionary=True)
+    if request.method=='POST':
+        query="Insert into govt_schemes(criteria_area,income,benefits,name) values(%s,%s,%s,%s)"
+        cur.execute(query,(request.form.get('criteria_area'),request.form.get('income'),request.form.get('benefits'),request.form.get('name')))
+        mydb.commit()
+        return redirect(url_for('govt_scheme_admin'))
+    query="Select * from govt_schemes"
+    cur.execute(query)
+    a=cur.fetchall()
+    return render_template('govt_scheme_admin.html',existing_schemes=a)
 @app.route('/allland',methods=['GET','POST'])
 def allland():
     cur=mydb.cursor(dictionary=True)

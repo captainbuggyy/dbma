@@ -1,0 +1,51 @@
+<!-- add_scheme.html -->
+{% extends 'admin.html' %}
+
+{% block link %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+{% endblock %}
+
+{% block con %}
+<main>
+    <section class="add-scheme">
+        <h1>Add New Government Scheme</h1>
+        <form method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="name">Scheme Name:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="income">Income Criteria:</label>
+                <input type="text" id="income" name="income" required>
+            </div>
+            <div class="form-group">
+                <label for="criteria_area">Land Area Criteria:</label>
+                <input type="text" id="criteria_area" name="criteria_area" required>
+            </div>
+            <div class="form-group">
+                <label for="benefits">Description/Benefits:</label>
+                <textarea id="benefits" name="benefits" rows="4" required></textarea>
+            </div>
+            <button type="submit" class="submit-button">Add Scheme</button>
+        </form>
+
+        <hr>
+
+        <h2>Existing Government Schemes</h2>
+        <div class="existing-schemes">
+            {% if existing_schemes %}
+                {% for scheme in existing_schemes %}
+                    <div class="scheme">
+                        <h3>{{ scheme['name'] }}</h3>
+                        <p><strong>Income Criteria:</strong> {{ scheme['income'] }}</p>
+                        <p><strong>Land Area Criteria:</strong> {{ scheme['criteria_area'] }}</p>
+                        <p><strong>Description:</strong> {{ scheme['benefits'] }}</p>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No existing schemes found.</p>
+            {% endif %}
+        </div>
+    </section>
+</main>
+{% endblock %}
