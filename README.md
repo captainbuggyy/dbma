@@ -40,6 +40,14 @@ Integration of user feedback and data collection to continuously enhance the rec
 Contributing
 Contributions to the project are welcome. If you have any suggestions, bug reports, or feature requests, please submit them through the issue tracker on the GitHub repository.
 
+## Technologies Used
+- **Python**: Programming language for developing the application, data analysis, and machine learning.
+- **Flask**: Web framework for building the backend and managing HTTP requests.
+- **Scikit-learn**: Machine learning library for model training, evaluation, and prediction.
+- **Pandas**: Data manipulation library for preprocessing and analyzing input data.
+- **NumPy**: Library for numerical operations, used in handling arrays and calculations.
+- **HTML/CSS**: Technologies used to build and style the web interface.
+- **JavaScript**: Scripting language for client-side functionality and user interaction.
 
 
 # Acknowledgements
