@@ -25,11 +25,11 @@ Additionally, farmers can provide details about their land and apply for various
 - **JavaScript**: Scripting language for client-side functionality and user interaction.
 
 ## Installation and Usage
-Clone the repository: git clone https://github.com/captainbuggyy/dbma.git
-Install the required dependencies: pip install -r requirements.txt
-Run Crop_recommendation.ipynb file
-Run the application: python run.py
-Access the application through the web browser at http://localhost:5000
+- Clone the repository: git clone https://github.com/captainbuggyy/dbma.git
+- Install the required dependencies: pip install -r requirements.txt
+- Run Crop_recommendation.ipynb file
+- Run the application: python run.py
+- Access the application through the web browser at http://localhost:5000
 
 
 # Future Enhancements
