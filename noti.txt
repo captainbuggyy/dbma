@@ -1,5 +1,5 @@
 
-create table landnotification(
+create table (
     land_id int,
     farmer_id in ,
     Name VARCHAR(50) ,

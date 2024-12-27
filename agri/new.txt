@@ -1,0 +1,183 @@
+SET FOREIGN_KEY_CHECKS = 0;
+
+CREATE DATABASE if not exists `agr`;
+USE `agr`;
+drop table if exists admin;
+CREATE TABLE `admin` (
+  `username` VARCHAR(20) NOT NULL,
+  `password` VARCHAR(20) DEFAULT NULL,
+  PRIMARY KEY (`username`)
+);
+INSERT INTO `admin` VALUES ('satvat', 'satvat'), ('sunil', 'sunil');
+
+CREATE DATABASE IF NOT EXISTS `agr`;
+USE `agr`;
+
+DROP TABLE IF EXISTS `user`;
+CREATE TABLE IF NOT EXISTS `user` (
+  `user_name` VARCHAR(20) DEFAULT NULL,
+  `password` VARCHAR(120) DEFAULT NULL,
+  `email` VARCHAR(50) DEFAULT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `user_name` (`user_name`)
+);
+
+INSERT INTO `user` VALUES 
+('Satvat', 'satvat', 'satvatsharma@gmail.com', 4),
+('sunil', 'sunil', 'sunil@gmail.com', 5),
+('Sudhanshu', 'sudhanshu', 'Sudhanshu@gmail.com', 6);
+
+CREATE DATABASE IF NOT EXISTS `agr`;
+USE `agr`;
+
+DROP TABLE IF EXISTS `farmer_notification`;
+CREATE TABLE IF NOT EXISTS `farmer_notification` (
+  `notification_id` INT NOT NULL AUTO_INCREMENT,
+  `farmer_id` INT DEFAULT NULL,
+  `reason` TEXT,
+  PRIMARY KEY (`notification_id`)
+);
+
+INSERT INTO `farmer_notification` VALUES 
+(1, 4, 'your application for land is approved'),
+(2, 4, 'your application for land is approved'),
+(3, 4, 'Rejected Land Application: Document not uploaded properly'),
+(4, 4, 'your application for Pradhan Mantri Fasal Bima Yojana (PMFBY) is approved'),
+(5, 4, 'your application for Prime Minister Matsya Sampada Yojana is approved'),
+(6, 4, 'your application for Prime Minister Matsya Sampada Yojana is approved'),
+(7, 4, 'your application for Prime Minister Matsya Sampada Yojana is approved'),
+(8, 5, 'your application for land is approved'),
+(9, 5, 'your application for land is approved'),
+(10, 5, 'your application for land is approved'),
+(11, 5, 'your application for land is approved'),
+(12, 5, 'your application for Prime Minister Matsya Sampada Yojana is approved'),
+(13, 6, 'your application for land is approved'),
+(14, 6, 'your application for land is approved'),
+(15, 6, 'your application for land is approved'),
+(16, 6, 'your application for Prime Minister Matsya Sampada Yojana is approved');
+
+CREATE DATABASE IF NOT EXISTS `agr`;
+USE `agr`;
+
+DROP TABLE IF EXISTS `farmer`;
+CREATE TABLE IF NOT EXISTS `farmer` (
+  `farmer_id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(30) DEFAULT NULL,
+  `contact` VARCHAR(10) DEFAULT NULL,
+  `email` VARCHAR(50) DEFAULT NULL,
+  `district` VARCHAR(20) DEFAULT NULL,
+  `state` VARCHAR(20) DEFAULT NULL,
+  `village` VARCHAR(20) DEFAULT NULL,
+  `approved` INT DEFAULT NULL,
+  `income` INT DEFAULT NULL,
+  PRIMARY KEY (`farmer_id`),
+  CONSTRAINT `fk_farmer_user` FOREIGN KEY (`farmer_id`) REFERENCES `user` (`id`)
+);
+
+INSERT INTO `farmer` VALUES 
+(4, 'SATVAT SAGAR', '9541746008', 'satvatsharma@gmail.com', 'Bangalore', 'Karnataka', 'Village4', NULL, NULL),
+(5, 'sunil', '933989894', 'sunil@gmail.com', 'Bangalore', 'Karnataka', 'Village3', NULL, NULL),
+(6, 'Sudhanshu', '998398920', 'Sudhanshu@gmail.com', 'Mysore', 'Maharashtra', 'Village4', NULL, NULL);
+
+CREATE DATABASE IF NOT EXISTS `agr`;
+USE `agr`;
+
+DROP TABLE IF EXISTS `farmer`;
+CREATE TABLE IF NOT EXISTS `farmer` (
+  `farmer_id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(30) DEFAULT NULL,
+  `contact` VARCHAR(10) DEFAULT NULL,
+  `email` VARCHAR(50) DEFAULT NULL,
+  `district` VARCHAR(20) DEFAULT NULL,
+  `state` VARCHAR(20) DEFAULT NULL,
+  `village` VARCHAR(20) DEFAULT NULL,
+  `approved` INT DEFAULT NULL,
+  `income` INT DEFAULT NULL,
+  PRIMARY KEY (`farmer_id`),
+  CONSTRAINT `fk_farmer_user` FOREIGN KEY (`farmer_id`) REFERENCES `user` (`id`)
+);
+
+INSERT INTO `farmer` VALUES 
+(4, 'SATVAT SAGAR', '9541746008', 'satvatsharma@gmail.com', 'Bangalore', 'Karnataka', 'Village4', NULL, NULL),
+(5, 'sunil', '933989894', 'sunil@gmail.com', 'Bangalore', 'Karnataka', 'Village3', NULL, NULL),
+(6, 'Sudhanshu', '998398920', 'Sudhanshu@gmail.com', 'Mysore', 'Maharashtra', 'Village4', NULL, NULL);
+
+CREATE DATABASE IF NOT EXISTS `agr`;
+USE `agr`;
+
+DROP TABLE IF EXISTS `govt_schemes`;
+CREATE TABLE IF NOT EXISTS `govt_schemes` (
+  `scheme_id` INT NOT NULL AUTO_INCREMENT,
+  `criteria_area` TINYTEXT,
+  `income` TINYTEXT,
+  `benefits` TEXT,
+  `name` TINYTEXT,
+  PRIMARY KEY (`scheme_id`)
+);
+
+INSERT INTO `govt_schemes` VALUES 
+(1, 'Minimum 2 acres', 'Below 1 lakh', 'Under the PM-KISAN Scheme, farmers receive an annual financial assistance of Rs 6,000. This amount is sent to farmers\' accounts in three installments of Rs 2,000 each at intervals of four months. Currently, 15 installments have already been transferred to farmers\' accounts. If you haven\'t yet applied for this scheme, it is advisable to do so.', 'Prime Minister Matsya Sampada Yojana'),
+(2, 'Minimum 10 acres', 'below 5 lakhs', 'Started in 2016, PMFBY has become the world\'s largest crop insurance scheme, with more than 5.5 crore farmers registering for crop insurance annually. It ensures claims of maximum benefits at minimum premiums and is an easy process for farmers to insure their crops against natural calamities like rainfall, temperature variations, hailstorms, and humidity.', 'Pradhan Mantri Fasal Bima Yojana (PMFBY)'),
+(3, 'Anyone with agr land', 'Anyone', 'Any farmer involved in agr, fisheries, or animal husbandry can benefit from obtaining a Kisan Credit Card. Initiated in 1998, this scheme is run by various government and non-government banks across the country. It provides loans based on land cultivation and crop sowing for purchasing farm inputs like fertilizers, pesticides, machinery, and insecticides.', 'Kisan Credit Card Scheme'),
+(4, 'No Criteria', 'No Criteria', 'Adequate irrigation is crucial for cash crops. If farmers don\'t move towards self-dependence on irrigation from traditional sources, it could negatively impact agricultural production. The aim of this centrally sponsored PMKSY started in 2015, is to ensure sufficient water availability for farming, expand irrigation in agr-compatible areas, improve water use efficiency, and promote continuous water conservation measures. Farmers installing drip irrigation systems under this scheme receive subsidies.', 'Pradhan Mantri Krishi Sinchai Yojana (PMKSY)');
+
+CREATE DATABASE IF NOT EXISTS `agr`;
+USE `agr`;
+
+DROP TABLE IF EXISTS `images`;
+
+CREATE TABLE IF NOT EXISTS `images` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(255) DEFAULT NULL,
+  `image` BLOB,
+  PRIMARY KEY (`id`)
+);
+
+
+DROP TABLE IF EXISTS `notification`;
+
+CREATE TABLE IF NOT EXISTS `notification` (
+  `farmer_id` INT DEFAULT NULL,
+  `land_id` INT DEFAULT NULL,
+  `type` VARCHAR(20) DEFAULT NULL,
+  `notification_id` INT NOT NULL AUTO_INCREMENT,
+  `scheme_id` INT DEFAULT NULL,
+  `pd` LONGBLOB,
+  PRIMARY KEY (`notification_id`)
+);
+CREATE DATABASE IF NOT EXISTS `agr`;
+USE `agr`;
+
+DROP TABLE IF EXISTS `land`;
+
+CREATE TABLE `land` (
+  `farmer_id` int DEFAULT NULL,
+  `land_id` int NOT NULL AUTO_INCREMENT,
+  `survey_no` int DEFAULT NULL,
+  `district` varchar(20) DEFAULT NULL,
+  `soil_type` varchar(20) DEFAULT NULL,
+  `land_area` decimal(10,2) DEFAULT NULL,
+  `approved` tinytext,
+  `file` longblob,
+  PRIMARY KEY (`land_id`),
+  KEY `fk_farmer` (`farmer_id`),
+  CONSTRAINT `fk_farmer` FOREIGN KEY (`farmer_id`) REFERENCES `farmer` (`farmer_id`)
+) ;
+
+CREATE DATABASE IF NOT EXISTS `agr`;
+USE `agr`;
+
+DROP TABLE IF EXISTS `scheme_applied`;
+
+CREATE TABLE `scheme_applied` (
+  `farmer_id` int DEFAULT NULL,
+  `scheme_id` int DEFAULT NULL
+) ;
+
+
+INSERT INTO `scheme_applied` VALUES (4,2),(6,1);
+
+
+
+SET FOREIGN_KEY_CHECKS = 1;

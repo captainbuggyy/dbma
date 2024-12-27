@@ -7,8 +7,9 @@
             <li><a id="land" href="{{url_for('land')}}">Land</a></li>
             <li><a href="{{url_for('profile')}}">Profile</a></li>
             <!-- <li><a href="#">crops</a></li> -->
-            <li><a href="#">Revenue</a></li>
-            <li><a href="{{url_for('govt_schemes')}}">Government Schemes</a></li>
+            <!-- <li><a href="#">Revenue</a></li> -->
+            <li><a href="{{url_for('govt_schemes')}}">Government Schemes</a></li>              
+            <li><a href="{{url_for('index')}}">Crop Recommendation</a></li>              
             <li><a href="#contact-section">Contact</a></li>
             <li><a id="login" href="{{url_for('logout')}}">Log out</a></li>
             <li><a  href="{{url_for('farmernotification')}}">Notifications</a></li>
@@ -30,7 +31,7 @@
 {% block con %}
 <main>
     <section class="hero">
-        <h1>Welcome to FarmerDB</h1>
+        <h1>Welcome to Farmer insights System</h1>
         <p>Your comprehensive resource for agricultural data and market information.</p>
     </section>
 

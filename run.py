@@ -2,17 +2,57 @@ from flask import Flask, render_template, request, session,flash,get_flashed_mes
 from flask_mysqldb import MySQL
 from flask_bcrypt import Bcrypt
 import mysql.connector
+import pandas
+import sklearn
+import pickle
 import requests
+import numpy as np
 app = Flask(__name__)
 bcrypt=Bcrypt(app)
 mydb=mysql.connector.connect(
     host="localhost",
     username="root",
     password="root",
-    database="agriculture"
+    database="agr"
 )
+model = pickle.load(open('model.pkl','rb'))
+sc = pickle.load(open('standscaler.pkl','rb'))
+ms = pickle.load(open('minmaxscaler.pkl','rb'))
 s=mydb.cursor(dictionary=True)
 app.config['SECRET_KEY']="c61261c7b2ba8da70c004965"
+@app.route('/index')
+def index():
+    return render_template("index.html")
+
+@app.route("/predict",methods=['POST'])
+def predict():
+    N = request.form['Nitrogen']
+    P = request.form['Phosphorus']
+    K = request.form['Potassium']
+    temp = request.form['Temperature']
+    humidity = request.form['Humidity']
+    ph = request.form['pH']
+    rainfall = request.form['Rainfall']
+
+    feature_list = [N, P, K, temp, humidity, ph, rainfall]
+    single_pred = np.array(feature_list).reshape(1, -1)
+
+    scaled_features = ms.transform(single_pred)
+    final_features = sc.transform(scaled_features)
+    prediction = model.predict(final_features)
+
+    crop_dict = {1: "Rice", 2: "Maize", 3: "Jute", 4: "Cotton", 5: "Coconut", 6: "Papaya", 7: "Orange",
+                 8: "Apple", 9: "Muskmelon", 10: "Watermelon", 11: "Grapes", 12: "Mango", 13: "Banana",
+                 14: "Pomegranate", 15: "Lentil", 16: "Blackgram", 17: "Mungbean", 18: "Mothbeans",
+                 19: "Pigeonpeas", 20: "Kidneybeans", 21: "Chickpea", 22: "Coffee"}
+
+    if prediction[0] in crop_dict:
+        crop = crop_dict[prediction[0]]
+        result = "{} is the best crop to be cultivated right there".format(crop)
+    else:
+        result = "Sorry, we could not determine the best crop to be cultivated with the provided data."
+    return render_template('index.html',result = result)
+
 @app.route('/')
 @app.route('/home')
 def home():
@@ -143,9 +183,7 @@ def register():
         username = request.form['username']
         email = request.form['email']
         password = request.form['password']
-        # print(password)
-        # password=bcrypt.generate_password_hash(password).decode('utf-8')
-        # print(password)
+
         
         cur = mydb.cursor()
         cur.execute("INSERT INTO user (user_name, email, PASSWORD) VALUES (%s, %s, %s)", (username, email, password))
@@ -306,7 +344,10 @@ def notifications():
             '''
             cursor.execute(query, (land_id, farmer_id))
             details = cursor.fetchone()
+            print(details)
+            print("00"*100)
             details['type'] = 'land'
+            
             details['notification_id'] = notification_id
             details['farmer_id'] = farmer_id
             details['land_id'] = land_id  # Add land_id to details for modal form
@@ -315,6 +356,8 @@ def notifications():
             query = "SELECT * FROM farmer WHERE farmer_id = %s"
             cursor.execute(query, (farmer_id,))
             details = cursor.fetchone()
+            print(details)
+            print("00"*100)
             details['type'] = 'govt_scheme'
             details['notification_id'] = notification_id
             details['scheme_id']=scheme_id
@@ -324,6 +367,8 @@ def notifications():
             a=cur.fetchall()[0][0]
             details['scheme_name']=a
             formatted_notifications.append(details)
+    print(formatted_notifications)
+    print("##"*100)
     return render_template('adminnotification.html', notifications=formatted_notifications)
 @app.route('/farmernotification')
 def farmernotification():
@@ -342,9 +387,6 @@ def adminlogin():
         query = "SELECT * FROM admin WHERE username = %s AND password = %s"
         cursor.execute(query, (username, password))
         user = cursor.fetchone()
-        # cursor.execute(query, (username,))
-        # print(farmer)
-        # print(1000*'*')
         cursor.close()
         if user:
             session['user']='admin'
